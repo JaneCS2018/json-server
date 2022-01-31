@@ -139,25 +139,24 @@ const Model = ((api, view) => {
     }
 
     class State {
-        #todolist = [];
+        #eventlist = [];
 
         get todolist() {
-            return this.#todolist;
+            return this.#eventlist;
         }
 
         set todolist(newdata) {
-            this.#todolist = newdata;
+            this.#eventlist = newdata;
 
             // render the todolist
             const ele = document.querySelector(view.domstr.eventlist);
-            const tmp = view.createTmp(this.#todolist);
+            const tmp = view.createTmp(this.#eventlist);
             view.render(ele, tmp);
 
         }
     }
 
     const getTodos = api.getTodos;
-   
     const addTodo = api.addTodo;
     const deleteTodo = api.deleteTodo;
 

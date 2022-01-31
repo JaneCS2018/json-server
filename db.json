@@ -4,12 +4,6 @@
       "eventName": "TEST",
       "startDate": "1641790800000",
       "endDate": "1641790800000",
-      "id": 8
-    },
-    {
-      "eventName": "TEST",
-      "startDate": "1641790800000",
-      "endDate": "1641790800000",
       "id": 10
     },
     {
@@ -23,12 +17,6 @@
       "startDate": "1641790800000",
       "endDate": "1641790800000",
       "id": 13
-    },
-    {
-      "eventName": "TEST",
-      "startDate": "1641790800000",
-      "endDate": "1641790800000",
-      "id": 14
     },
     {
       "eventName": "TEST",
@@ -2621,6 +2609,12 @@
       "startDate": "",
       "endDate": "",
       "id": 447
+    },
+    {
+      "eventName": "",
+      "startDate": "",
+      "endDate": "",
+      "id": 448
     }
   ]
 }
