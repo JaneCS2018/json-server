@@ -35,8 +35,6 @@ const Appapi = (() => {
     };
 })();
 
-//set a list boolean value, once click the add button it will turn to true
-let input_add = false
 
 const View = (() => {
     const domstr = {
