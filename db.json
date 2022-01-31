@@ -1,42 +1,6 @@
 {
   "events": [
     {
-      "eventName": "TEST-CHANGED",
-      "startDate": "1641790800000",
-      "endDate": "1641790800000",
-      "id": 2
-    },
-    {
-      "eventName": "TEST-3",
-      "startDate": "1641963600000",
-      "endDate": "1642309200000",
-      "id": 3
-    },
-    {
-      "eventName": "TEST",
-      "startDate": "1641790800000",
-      "endDate": "1641790800000",
-      "id": 4
-    },
-    {
-      "eventName": "TEST",
-      "startDate": "1641790800000",
-      "endDate": "1641790800000",
-      "id": 5
-    },
-    {
-      "eventName": "TEST",
-      "startDate": "1641790800000",
-      "endDate": "1641790800000",
-      "id": 6
-    },
-    {
-      "eventName": "TEST",
-      "startDate": "1641790800000",
-      "endDate": "1641790800000",
-      "id": 7
-    },
-    {
       "eventName": "TEST",
       "startDate": "1641790800000",
       "endDate": "1641790800000",
@@ -46,19 +10,7 @@
       "eventName": "TEST",
       "startDate": "1641790800000",
       "endDate": "1641790800000",
-      "id": 9
-    },
-    {
-      "eventName": "TEST",
-      "startDate": "1641790800000",
-      "endDate": "1641790800000",
       "id": 10
-    },
-    {
-      "eventName": "TEST",
-      "startDate": "1641790800000",
-      "endDate": "1641790800000",
-      "id": 11
     },
     {
       "eventName": "TEST",
@@ -107,12 +59,6 @@
       "startDate": "1641790800000",
       "endDate": "1641790800000",
       "id": 19
-    },
-    {
-      "eventName": "TEST",
-      "startDate": "1641790800000",
-      "endDate": "1641790800000",
-      "id": 20
     },
     {
       "eventName": "TEST",

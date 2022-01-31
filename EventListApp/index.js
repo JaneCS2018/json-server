@@ -17,12 +17,20 @@ const Appapi = (() => {
         }).then((response) => response.json());
 
 
-    // const deleteTodo = (id) =>
-    //     fetch([baseurl, path, id].join("/"), { method: "DELETE" });
+    const deleteTodo = (id) =>
+        fetch([baseurl, path, id].join("/"), { 
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              } 
+        
+        }).then((response) => response.json())
+
 
     return {
         getTodos,
-        // deleteTodo,
+        deleteTodo,
         addTodo,
     };
 })();
@@ -34,12 +42,11 @@ const View = (() => {
     const domstr = {
         eventlist: "#table_eventlist",
         addbtn: ".add_new",
+        deletebtn: ".delete_btn",
     };
     const render = (element, tmp) => {
- 
             element.innerHTML = tmp;
      
-        
     };
 
 
@@ -146,24 +153,20 @@ const Model = ((api, view) => {
             const tmp = view.createTmp(this.#todolist);
             view.render(ele, tmp);
 
-            // get all delete btns
-            // add eventlistener to each btn
-            // this.todolist = this.#todolist.filter((todo) => {
-            //     return +todo.id !== +event.target.id;
-            // });
         }
     }
 
     const getTodos = api.getTodos;
-    // const deleteTodo = api.deleteTodo;
+   
     const addTodo = api.addTodo;
+    const deleteTodo = api.deleteTodo;
 
     return {
         Todo,
         State,
         addTodo,
         getTodos,
-        // deleteTodo,
+        deleteTodo,
     };
 })(Appapi, View);
 
@@ -172,7 +175,7 @@ const Controller = ((model, view) => {
     const state = new model.State();
 
     //Add list
-    const addTodo = () => {
+    const addList = () => {
         const addbutton = document.querySelector(view.domstr.addbtn)
         addbutton.addEventListener("click", (event) => {
             const todo = new model.Todo('', '', '');
@@ -182,19 +185,19 @@ const Controller = ((model, view) => {
         })
     }
 
-    // const deletTodo = () => {
-    //     const ele = document.querySelector(view.domstr.todolist);
-    //     ele.addEventListener("click", (event) => {
+    const deleteList = () => {
+        const ele = document.querySelector(view.domstr.eventlist);
+        ele.addEventListener("click", (event) => {
 
-    //         if (event.target.id !== '') {
-    //             state.todolist = state.todolist.filter((todo) => {
-    //                 return +todo.id !== +event.target.id;
-    //             });
-    //             console.log(event.target.id);
-    //             model.deleteTodo(event.target.id);
-    //         }
-    //     });
-    // };
+            if (event.target.id !== '') {
+                state.todolist = state.todolist.filter((todo) => {
+                    return +todo.id !== +event.target.id;
+                });
+                console.log(event.target.id);
+                model.deleteTodo(event.target.id);
+            }
+        });
+    };
 
     const init = () => {
         model.getTodos().then((data) => {
@@ -204,8 +207,8 @@ const Controller = ((model, view) => {
 
     const bootstrap = () => {
         init();
-        // deletTodo();
-        addTodo();
+        addList();
+        deleteList();
     };
 
     return { bootstrap };
