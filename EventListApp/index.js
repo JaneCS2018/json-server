@@ -98,7 +98,7 @@ const View = (() => {
                
             <tr> 
                 <td>
-                    <input value=''} />
+                    <input type="text" value='' />
                 </td>
                 <td>
                     <input type="date" value="" />
