@@ -64,15 +64,15 @@ const View = (() => {
             const time = parseInt(ele["startDate"])
             const all_date = new Date(time);
             const year = all_date.getFullYear()
-            const month = all_date.getMonth() + 1
-            const date = all_date.getDate()
+            const month = (all_date.getMonth() + 1) <10 ? (all_date.getMonth() + 1).toString().padStart(2, '0'):(all_date.getMonth() + 1)
+            const date = all_date.getDate() <10 ? all_date.getDate().toString().padStart(2, '0'):all_date.getDate()
 
             //endDate
             const timeEnd = parseInt(ele["endDate"])
             const all_date_end = new Date(timeEnd);
             const End_year = all_date_end.getFullYear()
-            const End_month = all_date_end.getMonth() + 1
-            const End_date = all_date_end.getDate()
+            const End_month = (all_date_end.getMonth() + 1)<10 ? (all_date_end.getMonth() + 1).toString().padStart(2, '0') :(all_date_end.getMonth() + 1)
+            const End_date = all_date_end.getDate() < 10 ? all_date_end.getDate().toString().padStart(2,'0'): all_date_end.getDate()
 
            
             tmp += `
