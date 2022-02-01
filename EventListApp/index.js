@@ -2,14 +2,14 @@ const Appapi = (() => {
     const baseurl = "http://localhost:3000";
     const path = "events";
 
-    const getTodos = () =>
+    const getList = () =>
         fetch([baseurl, path].join("/")).then((response) => response.json())
 
     //AddTodo
-    const addTodo = (todo) =>
+    const addList = (list) =>
         fetch([baseurl, path].join("/"), {
             method: "POST",
-            body: JSON.stringify(todo),
+            body: JSON.stringify(list),
             headers: {
                 "Content-type": "application/json",
                 Accept: "application/json",
@@ -17,7 +17,7 @@ const Appapi = (() => {
         }).then((response) => response.json());
 
 
-    const deleteTodo = (id) =>
+    const deleteList = (id) =>
         fetch([baseurl, path, id].join("/"), { 
             method: "DELETE",
             headers: {
@@ -29,9 +29,9 @@ const Appapi = (() => {
 
 
     return {
-        getTodos,
-        deleteTodo,
-        addTodo,
+        getList,
+        deleteList,
+        addList,
     };
 })();
 
@@ -128,7 +128,7 @@ const View = (() => {
 
 // ~~~~~~~~~~~~~~~model~~~~~~~~~~~~~~~~~~~~~
 const Model = ((api, view) => {
-    class Todo {
+    class List {
         constructor(eventName, startDate, endDate) {
             this.eventName = eventName;
             this.startDate = startDate;
@@ -139,11 +139,11 @@ const Model = ((api, view) => {
     class State {
         #eventlist = [];
 
-        get todolist() {
+        get eventList() {
             return this.#eventlist;
         }
 
-        set todolist(newdata) {
+        set eventList(newdata) {
             this.#eventlist = newdata;
 
             // render the todolist
@@ -154,15 +154,15 @@ const Model = ((api, view) => {
         }
     }
 
-    const getTodos = api.getTodos;
-    const addTodo = api.addTodo;
-    const deleteTodo = api.deleteTodo;
+    const getList = api.getList;
+    const addList = api.addList;
+    const deleteTodo = api.deleteList;
 
     return {
-        Todo,
+        List,
         State,
-        addTodo,
-        getTodos,
+        addList,
+        getList,
         deleteTodo,
     };
 })(Appapi, View);
@@ -174,10 +174,10 @@ const Controller = ((model, view) => {
     //Add list
     const addList = () => {
         const addbutton = document.querySelector(view.domstr.addbtn)
-        addbutton.addEventListener("click", (event) => {
-            const todo = new model.Todo('', '', '');
-            model.addTodo(todo).then((newtodo) => {
-                state.todolist = [ ...state.todolist,newtodo];
+        addbutton.addEventListener("click", () => {
+            const newList = new model.List('', '', '');
+            model.addList(newList).then((newItem) => {
+                state.eventList = [ ...state.todolist,newItem];
             });
         })
     }
@@ -187,8 +187,8 @@ const Controller = ((model, view) => {
         ele.addEventListener("click", (event) => {
 
             if (event.target.id !== '') {
-                state.todolist = state.todolist.filter((todo) => {
-                    return +todo.id !== +event.target.id;
+                state.eventList = state.eventList.filter((item) => {
+                    return +item.id !== +event.target.id;
                 });
                 console.log(event.target.id);
                 model.deleteTodo(event.target.id);
@@ -197,8 +197,8 @@ const Controller = ((model, view) => {
     };
 
     const init = () => {
-        model.getTodos().then((data) => {
-            state.todolist = data;
+        model.getList().then((data) => {
+            state.eventList = data;
         });
     };
 
