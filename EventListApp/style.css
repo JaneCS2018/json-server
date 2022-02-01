@@ -64,6 +64,8 @@ button{
     border-radius: 5px;
     cursor: pointer;
 }
-.edit_button{
+.edit_button,
+.save_button{
     margin-right: 1.5rem;
 }
+

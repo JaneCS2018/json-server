@@ -101,13 +101,13 @@ const View = (() => {
                     <input value=''} />
                 </td>
                 <td>
-                    <input value="" />
+                    <input type="date" value="" />
                 </td>
                 <td>
-                    <input value="" />
+                    <input type="date" value="" />
                 </td>
                 <td>
-                    <button>SAVE</button>
+                    <button class="save_button">SAVE</button>
                     <button>CLOSE</button>
                 </td>
             </tr>
