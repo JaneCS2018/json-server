@@ -36,25 +36,28 @@ tr{
     border-bottom: 1px solid lightgrey;
 }
 #table_eventlist{
-    margin-top: 6rem;
+    margin-top: var(--tr-height);
 }
 
 .table__head{
     background-color: var(--tr-color);
-    height: var(--tr-height);
-    line-height: var(--tr-height);
+    width: 100%;
+    display: flex;
 }
 .table__toprow{
     width: 90%;
     background-color: white;
     position: fixed;
-    height: 7rem;
+    height: var(--tr-height);
+    display: flex;
+    align-items: center;
+    padding: 0 5rem;
 }
 .add_new{
     width:10rem;
     height:4rem;
     background-color: var(--color-button-add);
-    margin:1rem;
+    
 }
 button{
     border: none;

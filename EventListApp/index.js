@@ -1,3 +1,5 @@
+let input_value= false
+
 const Appapi = (() => {
     const baseurl = "http://localhost:3000";
     const path = "events";
@@ -18,13 +20,13 @@ const Appapi = (() => {
 
 
     const deleteList = (id) =>
-        fetch([baseurl, path, id].join("/"), { 
+        fetch([baseurl, path, id].join("/"), {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
                 Accept: "application/json",
-              } 
-        
+            }
+
         }).then((response) => response.json())
 
 
@@ -43,8 +45,8 @@ const View = (() => {
         deletebtn: ".delete_btn",
     };
     const render = (element, tmp) => {
-            element.innerHTML = tmp;
-     
+        element.innerHTML = tmp;
+
     };
 
 
@@ -72,9 +74,8 @@ const View = (() => {
             const End_month = all_date_end.getMonth() + 1
             const End_date = all_date_end.getDate()
 
-            
+           
             tmp += `
-               
             <tr class="table__content"> 
                 <td>
                     <input disabled value=${ele["eventName"]} />
@@ -90,37 +91,59 @@ const View = (() => {
                     <button id="${ele.id}">DELETE</button>
                 </td>
             </tr>
-            `;
-
+            `
         });
-       
-            tmp+=`
-               
-            <tr> 
-                <td>
-                    <input type="text" value='' />
-                </td>
-                <td>
-                    <input type="date" value="" />
-                </td>
-                <td>
-                    <input type="date" value="" />
-                </td>
-                <td>
-                    <button class="save_button">SAVE</button>
-                    <button>CLOSE</button>
-                </td>
-            </tr>
-            `;
-       
+        let len =arr.length
+        tmp += ` 
+        <tr> 
+            <td>
+                <input type="text" value="" />
+            </td>
+            <td>
+                <input type="date" value="" />
+            </td>
+            <td>
+                <input type="date" value="" />
+            </td>
+            <td>
+                <button class="save_button" id=${len}>SAVE</button>
+                <button id=${len}>CLOSE</button>
+            </td>
+        </tr>`
 
         return tmp;
     };
+
+    const addTmp = (arr) => {
+        let res = document.getElementById('table_eventlist').innerHTML
+        let len = arr.length + 1
+        const newRow = `   
+                    <tr> 
+                        <td>
+                            <input type="text" value="" />
+                        </td>
+                        <td>
+                            <input type="date" value="" />
+                        </td>
+                        <td>
+                            <input type="date" value="" />
+                        </td>
+                        <td>
+                            <button class="save_button" id=${len}>SAVE</button>
+                            <button id=${len}>CLOSE</button>
+                        </td>
+                    </tr>`
+
+        res += newRow
+        return res
+    }
+
 
     return {
         domstr,
         render,
         createTmp,
+        addTmp
     };
 })();
 
@@ -175,10 +198,17 @@ const Controller = ((model, view) => {
     const addList = () => {
         const addbutton = document.querySelector(view.domstr.addbtn)
         addbutton.addEventListener("click", () => {
+
+            // const newTmp = view.addTmp(state.eventList)
+            // view.render(table, newTmp);
+            // state.eventList = newTmp
+            input_value=true
             const newList = new model.List('', '', '');
             model.addList(newList).then((newItem) => {
-                state.eventList = [ ...state.todolist,newItem];
+                state.eventList = [ ...state.eventList, newItem];
             });
+            console.log(input_value)
+
         })
     }
 
