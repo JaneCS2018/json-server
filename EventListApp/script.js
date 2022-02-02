@@ -1,13 +1,6 @@
 const eventList = document.getElementById('table_eventlist')
 const addnew = document.querySelector('.add_new')
-let output = `
-        <tr class="table__head">
-        <th>Event name</th>
-        <th>Start date</th>
-        <th>End date</th>
-        <th>Actions</th>
-        </tr>
-        `
+let output = ``
 const url = 'http://localhost:3000/events'
 
 const renderEvents = (events) => {

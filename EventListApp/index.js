@@ -1,5 +1,3 @@
-let input_value= false
-
 const Appapi = (() => {
     const baseurl = "http://localhost:3000";
     const path = "events";
@@ -51,13 +49,7 @@ const View = (() => {
 
 
     const createTmp = (arr) => {
-        let tmp = ` 
-            <tr class="table__head">
-                <th>Event name</th>
-                <th>Start date</th>
-                <th>End date</th>
-                <th>Actions</th>
-            </tr>`;
+        let tmp = ``;
         arr.forEach((ele) => {
 
             //startDate          
