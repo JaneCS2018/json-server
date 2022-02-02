@@ -17,36 +17,37 @@ const renderEvents = (events) => {
         output += `
             <tr class="table__content" id=${ele["id"]}> 
                 <td>
-                    <input disabled value=${ele["eventName"]} />
+                    <input disabled value=${ele["eventName"]} id="eventName_${ele["id"]}" />
                 </td>
                 <td>
-                    <input disabled value=${startdate} />
+                    <input disabled value=${startdate} id="startDate_${ele["id"]}" />
                 </td>
                 <td>
-                    <input disabled value=${enddate} />
+                    <input disabled value=${enddate} id="endDate_${ele["id"]}" />
                 </td>
                 <td>
-                    <button class="edit_button" id="edit-event" >EDIT</button>
-                    <button id="delete-event">DELETE</button>
+                    <input type="submit" class="edit_button" class="edit-event_${ele["id"]}" id="edit-event" value="EDIT">
+                    <input type="submit" id="delete-event" value="DELETE">
                 </td>
             </tr>
         `
     });
 
+    let len = events.length + 1
     output += ` 
-        <tr> 
+        <tr id='Input_${len}''> 
             <td>
-                <input type="text" value="" id="eventName_${events.length}" />
+                <input type="text" value="" id="eventName_${len}" />
             </td>
             <td>
-                <input type="date" value="" id="startDate_${events.length}" />
+                <input type="date" value="" id="startDate_${len}" />
             </td>
             <td>
-                <input type="date" value="" id="endDate_${events.length}" />
+                <input type="date" value="" id="endDate_${len}" />
             </td>
             <td>
-                <button class="save" id='save_${events.length}' onclick='save(event)'}>SAVE</button>
-                <button id="close-event">CLOSE</button>
+                <input type="submit" class="save" id='save_${len}' onclick='save(event)'} value="SAVE">
+                <input type="submit" id="close_${len}" value="CLOSE">
             </td>
         </tr>`
 
@@ -56,20 +57,21 @@ const renderEvents = (events) => {
 
 //Add new row click
 addnew.addEventListener('click', (events) => {
+    let len = events.length + 1
     output += ` 
-        <tr> 
+        <tr id="Input_${len}"> 
             <td>
-                <input type="text" value="" id="eventName_${events.length}" />
+                <input type="text" value="" id="eventName_${len}" />
             </td>
             <td>
-                <input type="date" value="" id="startDate_${events.length}" />
+                <input type="date" value="" id="startDate_${len}" />
             </td>
             <td>
-                <input type="date" value="" id="endDate_${events.length}" />
+                <input type="date" value="" id="endDate_${len}" />
             </td>
             <td>
-                <button class="save" id='save_${events.length}' onclick='save(event)'}>SAVE</button>
-                <button id="close-event">CLOSE</button>
+                <input type="submit" id='save_${len}' onclick='save(event)'} value="SAVE">
+                <input type="submit" id="close_${len}" value="CLOSE">
             </td>
         </tr>`
     eventList.innerHTML = output
@@ -87,6 +89,15 @@ const timeConverter = (timestamp) => {
 }
 
 
+function toTimestamp(strDate) {
+    let date = strDate.split('-')
+    let dd = date[2]
+    let mm = date[1]
+    let yy = date[0]
+    let all = `${mm}-${dd}-${yy} 23:31:30`
+    var datum = Date.parse(all);
+    return datum.toString()
+}
 
 
 //Get - Read the posts
@@ -98,10 +109,18 @@ fetch(url)
     })
 
 eventList.addEventListener('click', (e) => {
-    e.preventDefault();
-    let delButtonIsPressed = e.target.id === 'delete-event'
-    let editButtonIsPressed = e.target.id === 'edit-event'
+    let delButtonIsPressed = e.target.value === 'DELETE'
+    let editButtonIsPressed = e.target.value === 'EDIT'
+    let updateButtonIsPressed = e.target.value === "UPDATE"
+    let closeButtonIsPressed = e.target.value === 'CLOSE'
     let id = e.target.parentElement.parentElement.id
+
+
+    //Get EventName, StartDay, End
+    const UpdateEventName = document.getElementById(`eventName_${id}`)
+    const UpdateStartDay = document.getElementById(`startDate_${id}`)
+    const UpdateEndDay = document.getElementById(`endDate_${id}`)
+
 
     //Delete - Remove the existing event
     //method: DELETE
@@ -112,62 +131,99 @@ eventList.addEventListener('click', (e) => {
                 "Content-Type": "application/json",
                 Accept: "application/json",
             },
-            })
+        })
             .then((response) => response.json())
             .then((json) => console.log(json));
         console.log('delete')
     }
 
-    if(editButtonIsPressed){
-        
+    //Update data
+    if (editButtonIsPressed) {
+        UpdateEventName.removeAttribute("disabled")
+        UpdateStartDay.removeAttribute("disabled")
+        UpdateStartDay.setAttribute("type", "Date")
+        UpdateEndDay.removeAttribute("disabled")
+        UpdateEndDay.setAttribute("type", "Date")
+        e.target.value = "UPDATE"
+
+
+    }
+    if (updateButtonIsPressed) {
+        const UpdateEventName_v = UpdateEventName.value
+        const UpdateStartDay_v = UpdateStartDay.value
+        const UpdateEndDay_v = UpdateEndDay.value
+
+        const start = toTimestamp(UpdateStartDay_v)
+        const end = toTimestamp(UpdateEndDay_v)
+
+        if (UpdateEventName_v !== '' &&
+            UpdateStartDay_v !== '' &&
+            UpdateEndDay_v !== '') {
+
+            fetch([url, id].join("/"), {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify({
+                    eventName: UpdateEventName_v,
+                    startDate: start,
+                    endDate: end,
+                }),
+            })
+                .then((response) => response.json())
+
+        } else {
+            alert("Some of your inputs may not be empty")
+        }
+    }
+
+    //Close button
+    if (closeButtonIsPressed) {
+        const id = e.target.id.split('_')[1]
+        const ele = document.getElementById(`Input_${id}`)
+        ele.remove()
     }
 
 })
 
-function toTimestamp(strDate) {
-    var datum = Date.parse(strDate);
-    return datum / 1000;
-}
+
+
 
 function save(event) {
+    const id = event.target.id.split('_')[1]
+    const start_date = document.getElementById(`startDate_${id}`).value
+    const end_date = document.getElementById(`endDate_${id}`).value
 
-    const len = event.target.id.split('_')[1]
-    const start_date = document.getElementById(`startDate_${len}`).value.split('-')
+    const start_timestamp = toTimestamp(start_date)
+    const end_timestamp = toTimestamp(end_date)
 
-    const eve_name = document.getElementById(`eventName_${len}`).value
-    const start_yy = parseInt(start_date[2])
-    const start_mm = parseInt(start_date[0]) < 10 ? start_date[0].padStart(2, '0') : parseInt(start_date[0])
-    const start_dd = parseInt(start_date[1]) < 10 ? start_date[1].padStart(2, '0') : parseInt(start_date[1])
+    const eve_name = document.getElementById(`eventName_${id}`).value
 
-    const end_date = document.getElementById(`endDate_${len}`).value.split('-')
-    const end_yy = parseInt(end_date[2])
-    const end_mm = parseInt(end_date[0]) < 10 ? end_date[0].padStart(2, '0') : parseInt(end_date[0])
-    const end_dd = parseInt(end_date[1]) < 10 ? end_date[1].padStart(2, '0') : parseInt(end_date[1])
-
-    // console.log(toTimestamp('02/13/2020 23:31:30'));
-    const start_time = `${start_mm}/${start_dd}/${start_yy} 23:31:30`
-    const end_time = `${end_mm}/${end_dd}/${end_yy} 23:31:30`
-
-    const start_timestamp = toTimestamp(start_time)
-    const end_timestamp = toTimestamp(end_time)
-
-
-    fetch(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-        },
-        body: JSON.stringify({
-            eventName: eve_name,
-            startDate: start_timestamp,
-            endDate: end_timestamp,
-        }),
-    })
-        .then((response) => response.json())
-        .then(data => {
-            const dataArr = []
-            dataArr.push(data)
-            renderEvents(dataArr)
+    //POST Event
+    if (eve_name !== '' &&
+        start_timestamp !== '' &&
+        end_timestamp !== '') {
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: JSON.stringify({
+                eventName: eve_name,
+                startDate: start_timestamp,
+                endDate: end_timestamp,
+            }),
         })
+            .then((response) => response.json())
+            .then(data => {
+                const dataArr = []
+                dataArr.push(data)
+                renderEvents(dataArr)
+            })
+    } else {
+        alert("Enter valid value")
+    }
 }
