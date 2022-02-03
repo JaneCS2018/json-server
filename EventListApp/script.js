@@ -1,8 +1,9 @@
 const eventList = document.getElementById('table_eventlist')
 const addnew = document.querySelector('.add_new')
-let output = ``
+let output = ""
 const url = 'http://localhost:3000/events'
 
+//Show data
 const renderEvents = (events) => {
     events.forEach(ele => {
         let startdate = timeConverter(ele["startDate"])
@@ -26,6 +27,7 @@ const renderEvents = (events) => {
         `
     });
 
+//Add extra empty input 
     let len = events.length + 1
     output += ` 
         <tr id='Input_${len}''> 
@@ -39,7 +41,7 @@ const renderEvents = (events) => {
                 <input type="date" value="" id="endDate_${len}" />
             </td>
             <td>
-                <input type="submit" class="save" id='save_${len}' onclick='save(event)'} value="SAVE">
+                <input type="submit" class="save" id="save_${len}" value="SAVE">
                 <input type="submit" id="close_${len}" value="CLOSE">
             </td>
         </tr>`
@@ -48,7 +50,7 @@ const renderEvents = (events) => {
 
 }
 
-//Add new row click
+//AddNewButton to add new input
 addnew.addEventListener('click', (events) => {
     let len = events.length + 1
     output += ` 
@@ -63,7 +65,7 @@ addnew.addEventListener('click', (events) => {
                 <input type="date" value="" id="endDate_${len}" />
             </td>
             <td>
-                <input type="submit" id='save_${len}' onclick='save(event)'} value="SAVE">
+                <input type="submit" id="save_${len}"  value="SAVE">
                 <input type="submit" id="close_${len}" value="CLOSE">
             </td>
         </tr>`
@@ -71,7 +73,7 @@ addnew.addEventListener('click', (events) => {
 })
 
 
-
+//Timestamp to specific date
 const timeConverter = (timestamp) => {
     const timestamp_int = parseInt(timestamp)
     const all_date = new Date(timestamp_int);
@@ -81,7 +83,7 @@ const timeConverter = (timestamp) => {
     return `${year}-${month}-${date}`
 }
 
-
+//Specific date to timestamp convert
 function toTimestamp(strDate) {
     let date = strDate.split('-')
     let dd = date[2]
@@ -92,42 +94,134 @@ function toTimestamp(strDate) {
     return datum.toString()
 }
 
+//Define All Methods
 
 //Get - Read the posts
-let res
-fetch(url)
+const getList=(url)=>{
+    fetch(url)
     .then(res => res.json())
     .then(data => {
         renderEvents(data)
     })
 
+}
+
+//Post
+const createList=(url, eventName, startTimeStamp, endTimeStamp)=>{
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
+        body: JSON.stringify({
+            eventName: eventName,
+            startDate: startTimeStamp,
+            endDate: endTimeStamp,
+        }),
+    })
+        .then((response) => response.json())
+        .then(data => {
+            renderEvents(data)
+        })
+}
+
+
+//Delete
+const deleteList=(url, id)=>{
+    fetch([url, id].join('/'), {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
+    })
+        .then((response) => response.json())
+}
+
+
+//Update
+const updateList=(url, id, eventName, startTimeStamp, endTimeStamp)=>{
+    fetch([url, id].join("/"), {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
+        body: JSON.stringify({
+            eventName: eventName,
+            startDate: startTimeStamp,
+            endDate: endTimeStamp,
+        }),
+    })
+        .then((response) => response.json())
+}
+
+
+
+//Call Get Event
+getList(url)
+
+//Call Post Event
+// function save(event) {
+//     const save_id = event.target.id.split('_')[1]
+//     const start_date = document.getElementById(`startDate_${save_id}`).value
+//     const end_date = document.getElementById(`endDate_${save_id}`).value
+
+//     const start_timestamp = toTimestamp(start_date)
+//     const end_timestamp = toTimestamp(end_date)
+
+//     const eve_name = document.getElementById(`eventName_${save_id}`).value
+
+//     //POST Event
+//     if (eve_name !== '' &&
+//         start_timestamp !== '' &&
+//         end_timestamp !== '') {
+//             createList(url, eve_name, start_timestamp, end_timestamp)
+//     } else {
+//         alert("Enter valid value")
+//     }
+// }
+
 eventList.addEventListener('click', (e) => {
+    let id = e.target.parentElement.parentElement.id
     let delButtonIsPressed = e.target.value === 'DELETE'
     let editButtonIsPressed = e.target.value === 'EDIT'
-    let updateButtonIsPressed = e.target.value === "UPDATE"
+    let updateButtonIsPressed = e.target.value === 'UPDATE'
+    let saveButtonIsPressed = e.target.value === 'SAVE'
     let closeButtonIsPressed = e.target.value === 'CLOSE'
-    let id = e.target.parentElement.parentElement.id
 
 
-    //Get EventName, StartDay, End
+    //Get EventName, StartDate, EndDate
     const UpdateEventName = document.getElementById(`eventName_${id}`)
     const UpdateStartDay = document.getElementById(`startDate_${id}`)
     const UpdateEndDay = document.getElementById(`endDate_${id}`)
 
+    //Post Event
+    if(saveButtonIsPressed){
+        const save_id = e.target.id.split('_')[1]
+        const start_date = document.getElementById(`startDate_${save_id}`).value
+        const end_date = document.getElementById(`endDate_${save_id}`).value
+        const eve_name = document.getElementById(`eventName_${save_id}`).value
+    
+        const start_timestamp = toTimestamp(start_date)
+        const end_timestamp = toTimestamp(end_date)
+    
+    
+    //POST Event
+    if (eve_name !== '' &&
+        start_timestamp !== '' &&
+        end_timestamp !== '') {
+            createList(url, eve_name, start_timestamp, end_timestamp)
+        } else {
+            alert("Please enter valid values to all fields")
+        }
+
+    }
 
     //Delete - Remove the existing event
-    //method: DELETE
     if (delButtonIsPressed) {
-        fetch([url, id].join('/'), {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-            },
-        })
-            .then((response) => response.json())
-            .then((json) => console.log(json));
-        console.log('delete')
+        deleteList(url, id)
     }
 
     //Update data
@@ -146,29 +240,17 @@ eventList.addEventListener('click', (e) => {
         const UpdateStartDay_v = UpdateStartDay.value
         const UpdateEndDay_v = UpdateEndDay.value
 
-        const start = toTimestamp(UpdateStartDay_v)
-        const end = toTimestamp(UpdateEndDay_v)
+        const startDate = toTimestamp(UpdateStartDay_v)
+        const endDate = toTimestamp(UpdateEndDay_v)
 
         if (UpdateEventName_v !== '' &&
             UpdateStartDay_v !== '' &&
             UpdateEndDay_v !== '') {
 
-            fetch([url, id].join("/"), {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                },
-                body: JSON.stringify({
-                    eventName: UpdateEventName_v,
-                    startDate: start,
-                    endDate: end,
-                }),
-            })
-                .then((response) => response.json())
+            updateList(url, id, UpdateEventName_v, startDate, endDate)
 
         } else {
-            alert("Some of your inputs may not be empty")
+            alert("Please fill out all the fields")
         }
     }
 
@@ -183,40 +265,3 @@ eventList.addEventListener('click', (e) => {
 
 
 
-
-function save(event) {
-    const id = event.target.id.split('_')[1]
-    const start_date = document.getElementById(`startDate_${id}`).value
-    const end_date = document.getElementById(`endDate_${id}`).value
-
-    const start_timestamp = toTimestamp(start_date)
-    const end_timestamp = toTimestamp(end_date)
-
-    const eve_name = document.getElementById(`eventName_${id}`).value
-
-    //POST Event
-    if (eve_name !== '' &&
-        start_timestamp !== '' &&
-        end_timestamp !== '') {
-        fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-            },
-            body: JSON.stringify({
-                eventName: eve_name,
-                startDate: start_timestamp,
-                endDate: end_timestamp,
-            }),
-        })
-            .then((response) => response.json())
-            .then(data => {
-                const dataArr = []
-                dataArr.push(data)
-                renderEvents(dataArr)
-            })
-    } else {
-        alert("Enter valid value")
-    }
-}
