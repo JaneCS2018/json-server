@@ -83,13 +83,19 @@ const timeConverter = (timestamp) => {
     return `${year}-${month}-${date}`
 }
 
+
+
 //Specific date to timestamp convert
 function toTimestamp(strDate) {
     let date = strDate.split('-')
     let dd = date[2]
     let mm = date[1]
     let yy = date[0]
-    let all = `${mm}-${dd}-${yy} 23:31:30`
+
+    //Get current hours, minutes, seconds
+    let today = new Date();
+    let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    let all = `${mm}-${dd}-${yy} ${time}`
     var datum = Date.parse(all);
     return datum.toString()
 }
