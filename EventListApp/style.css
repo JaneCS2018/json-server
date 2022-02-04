@@ -13,9 +13,7 @@ main{
 }
 
 .table__container{
-    width:90%;
-    box-shadow: 1px 1px 3px grey;
-    
+    width:90%;    
 }
 
 table{
@@ -93,5 +91,24 @@ input[type="submit"]{
     border-radius: 5px;
     cursor: pointer;
     margin-right: 1.5rem;
+}
+
+.pagination{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    height: 4rem;
+    margin-top: 1rem;
+}
+.pagination input{
+    color: var(--color-button-text);
+    border: none;
+    margin-right: 1rem;
+    cursor: pointer;
+}
+
+.Page_text{
+    text-align: center;
+    font-size: 1.2rem;
 }
 
